@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-const CategoryForm = () => {
+const CategoryForm = ({ setCategories }) => {
   const [isShow, setIsShow] = useState(false);
 
-  const [categoryFormData, setCategoryFormData] = useState({
+  const [categoryData, setCategoryData] = useState({
     title: '',
     description: '',
   });
@@ -15,12 +15,21 @@ const CategoryForm = () => {
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
-    setCategoryFormData({
-      ...categoryFormData,
+    setCategoryData({
+      ...categoryData,
       [name]: value,
-      id: Date.now(),
     });
-    console.log(name);
+  };
+
+  const addNewCategoryHandler = (e) => {
+    e.preventDefault();
+    const newCategory = {
+      ...categoryData,
+      id: Date.now(),
+      createdAt: new Date().toISOString(),
+    };
+    setCategories((prevState) => [...prevState, newCategory]);
+    setCategoryData({ title: '', description: '' });
   };
 
   return (
@@ -46,7 +55,7 @@ const CategoryForm = () => {
               name='title'
               id='category-title'
               aria-label='category-title'
-              value={categoryFormData.title}
+              value={categoryData.title}
               onChange={changeHandler}
             />
             <span
@@ -68,7 +77,7 @@ const CategoryForm = () => {
               type=' text'
               name='description'
               id='category-description'
-              value={categoryFormData.description}
+              value={categoryData.description}
               onChange={changeHandler}
             ></textarea>
             <span
@@ -87,6 +96,7 @@ const CategoryForm = () => {
               Cancel
             </button>
             <button
+              onClick={addNewCategoryHandler}
               id='add-new-category'
               className='flex-1 bg-slate-500 text-slate-200 rounded-xl py-2 hover:bg-slate-300 hover:text-slate-700'
             >

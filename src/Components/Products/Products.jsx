@@ -1,4 +1,30 @@
-const ProductsForm = () => {
+import { useState } from 'react';
+
+const ProductsForm = ({ categories }) => {
+  const [productData, setProductData] = useState({
+    title: '',
+    quantity: 1,
+    category: '',
+  });
+
+  const [products, setProducts] = useState([]);
+
+  const changeHandler = (e) => {
+    const { name, value } = e.target;
+    setProductData({ ...productData, [name]: value });
+  };
+
+  const addNewProductHandler = (e) => {
+    e.preventDefault();
+    const newProduct = {
+      ...productData,
+      id: Date.now(),
+      createdAt: new Date().toISOString(),
+    };
+    setProducts((prevState) => [...prevState, newProduct]);
+    setProductData({ title: '', quantity: 1, category: '' });
+  };
+
   return (
     <div className='mb-6'>
       <h2 className='text-xl text-slate-300 font-bold mb-2'>Add New Product</h2>
@@ -12,9 +38,11 @@ const ProductsForm = () => {
               title
             </label>
             <input
-              className='bg-transparent px-2 py-1 rounded-xl border-2 border-slate-500 text-slate-400 h-10 w-full md:w-auto outline-none focus:border-white'
+              name='title'
               type='text'
-              name='product-title'
+              value={productData.title}
+              onChange={changeHandler}
+              className='bg-transparent px-2 py-1 rounded-xl border-2 border-slate-500 text-slate-400 h-10 w-full md:w-auto outline-none focus:border-white'
               id='product-title'
               aria-label='product-title'
               placeholder='product title'
@@ -30,7 +58,9 @@ const ProductsForm = () => {
             <input
               className='bg-transparent rounded-xl border-2 border-slate-500 text-slate-400 h-10 w-full px-2 md:w-auto appearance-none outline-none focus:border-white'
               type='number'
-              name='product-quantity'
+              name='quantity'
+              value={productData.quantity}
+              onChange={changeHandler}
               id='product-quantity'
               aria-label='product-quantity'
               min='1'
@@ -46,28 +76,33 @@ const ProductsForm = () => {
               category
             </label>
             <select
-              defaultValue=''
-              name='product-category'
+              value={productData.category}
+              onChange={changeHandler}
+              name='category'
               id='product-category'
-              className='form-select bg-transparent text-slate-400 rounded-xl w-full border-2 border-slate-500 h-10 p-2  block outline-none focus:border-white'
+              className='form-select bg-transparent text-slate-400 rounded-xl w-full border-2 border-slate-500 h-10 p-2 block outline-none focus:border-white'
             >
               <option value='' disabled hidden>
                 Select a category
               </option>
-              <option className='bg-slate-500 text-slate-300' value='backend'>
-                backend
-              </option>
-              <option className='bg-slate-500 text-slate-300' value='frontend'>
-                frontend
-              </option>
-              <option className='bg-slate-500 text-slate-300' value='ios'>
-                ios
-              </option>
+
+              {categories.map((category) => {
+                return (
+                  <option
+                    className='bg-slate-500 text-slate-300 py-2'
+                    key={category.id}
+                    value={category.title}
+                  >
+                    {category.title}
+                  </option>
+                );
+              })}
             </select>
           </div>
           <div className='flex items-center justify-between gap-x-4'>
             <button
               id='add-new-product'
+              onClick={addNewProductHandler}
               className='flex-1 bg-slate-500 text-slate-200 rounded-xl py-2 hover:bg-slate-300 hover:text-slate-500'
             >
               Add new Product
