@@ -12,7 +12,7 @@ const ProductsForm = () => {
               title
             </label>
             <input
-              className='bg-transparent px-2 py-1 rounded-xl border border-slate-500 text-slate-400 h-10 w-full md:w-auto outline-none focus:border-white'
+              className='bg-transparent px-2 py-1 rounded-xl border-2 border-slate-500 text-slate-400 h-10 w-full md:w-auto outline-none focus:border-white'
               type='text'
               name='product-title'
               id='product-title'
@@ -46,11 +46,12 @@ const ProductsForm = () => {
               category
             </label>
             <select
+              defaultValue=''
               name='product-category'
               id='product-category'
-              className='form-select bg-transparent text-slate-400 rounded-xl w-full border-2 border-slate-500 h-10 px-2 block outline-none focus:border-white'
+              className='form-select bg-transparent text-slate-400 rounded-xl w-full border-2 border-slate-500 h-10 p-2  block outline-none focus:border-white'
             >
-              <option value='' disabled selected hidden>
+              <option value='' disabled hidden>
                 Select a category
               </option>
               <option className='bg-slate-500 text-slate-300' value='backend'>

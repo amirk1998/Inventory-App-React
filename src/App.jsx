@@ -9,7 +9,7 @@ function App() {
       {/* App Content */}
       <div className='container max-w-screen-sm mx-auto p-4'>
         <CategoryForm />
-        <ProductsForm />
+        {/* <ProductsForm /> */}
       </div>
     </div>
   );
