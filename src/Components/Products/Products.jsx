@@ -1,13 +1,13 @@
 import { useState } from 'react';
 
-const ProductsForm = ({ categories }) => {
+const ProductsForm = ({ categories, setProducts }) => {
   const [productData, setProductData] = useState({
     title: '',
-    quantity: 1,
-    category: '',
+    quantity: '',
+    categoryID: '',
   });
 
-  const [products, setProducts] = useState([]);
+  // const [products, setProducts] = useState([]);
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
@@ -22,7 +22,7 @@ const ProductsForm = ({ categories }) => {
       createdAt: new Date().toISOString(),
     };
     setProducts((prevState) => [...prevState, newProduct]);
-    setProductData({ title: '', quantity: 1, category: '' });
+    setProductData({ title: '', quantity: '', categoryID: '' });
   };
 
   return (
@@ -76,9 +76,9 @@ const ProductsForm = ({ categories }) => {
               category
             </label>
             <select
-              value={productData.category}
+              value={productData.categoryID}
               onChange={changeHandler}
-              name='category'
+              name='categoryID'
               id='product-category'
               className='form-select bg-transparent text-slate-400 rounded-xl w-full border-2 border-slate-500 h-10 p-2 block outline-none focus:border-white'
             >
@@ -91,7 +91,7 @@ const ProductsForm = ({ categories }) => {
                   <option
                     className='bg-slate-500 text-slate-300 py-2'
                     key={category.id}
-                    value={category.title}
+                    value={category.id}
                   >
                     {category.title}
                   </option>
