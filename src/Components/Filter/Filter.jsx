@@ -1,4 +1,11 @@
-const Filter = ({ sort, searchValue, onSort, onSearch }) => {
+const Filter = ({
+  sort,
+  searchValue,
+  onSort,
+  onSearch,
+  categories,
+  onSelectCategory,
+}) => {
   return (
     <div>
       {/* Search */}
@@ -50,7 +57,7 @@ const Filter = ({ sort, searchValue, onSort, onSearch }) => {
               id='sort-order'
               value={sort.sortOrder}
               onChange={onSort}
-              className='form-select bg-transparent text-slate-400 rounded-xl border border-slate-500 h-10 px-2 appearance-none w-32'
+              className='form-select bg-transparent text-slate-400 rounded-xl border border-slate-500 h-10 px-2 appearance-none w-36'
             >
               <option className='bg-slate-500 text-slate-300' value='latest'>
                 Latest
@@ -72,18 +79,26 @@ const Filter = ({ sort, searchValue, onSort, onSearch }) => {
               name='category'
               id='category'
               value={sort.category}
-              onChange={onSort}
-              className='form-select bg-transparent text-slate-400 rounded-xl border border-slate-500 h-10 px-2 appearance-none w-32'
+              onChange={onSelectCategory}
+              className='form-select bg-transparent text-slate-400 rounded-xl border border-slate-500 h-10 px-2 appearance-none w-36'
             >
-              <option
-                className='bg-slate-500 text-slate-300'
-                value='all'
-                disabled
-                hidden
-              >
-                Categories
+              <option className='bg-slate-500 text-slate-300' value='all'>
+                All
               </option>
-              <option className='bg-slate-500 text-slate-300' value='clothing'>
+
+              {categories.map((category) => {
+                return (
+                  <option
+                    className='bg-slate-500 text-slate-300'
+                    value={category.id}
+                    key={category.id}
+                  >
+                    {category.title}
+                  </option>
+                );
+              })}
+
+              {/* <option className='bg-slate-500 text-slate-300' value='clothing'>
                 Clothing
               </option>
               <option
@@ -94,7 +109,7 @@ const Filter = ({ sort, searchValue, onSort, onSearch }) => {
               </option>
               <option className='bg-slate-500 text-slate-300' value='home'>
                 Home
-              </option>
+              </option> */}
             </select>
           </div>
         )}

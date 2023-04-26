@@ -9,27 +9,28 @@ function App() {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  // const [sort, setSort] = useState('latest');
   const [sort, setSort] = useState({
     sortBy: 'date',
     sortOrder: 'latest',
-    category: '',
+    category: 'all',
   });
   const [searchValue, setSearchValue] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   useEffect(() => {
     let result = products;
     result = filterSearchTitle(result);
+    result = filterSelectCategory(result);
     result = sortDate(result);
     setFilteredProducts(result);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [products, sort, searchValue]);
+  }, [products, sort, searchValue, selectedCategory]);
 
   const searchHandler = (e) => {
     setSearchValue(e.target.value.trim().toLowerCase());
   };
 
-  const sortHandler = (e) => {
+  const sortTypeHandler = (e) => {
     // setSort(e.target.value);
     const { name, value } = e.target;
     if (name === 'sort-by') {
@@ -51,12 +52,24 @@ function App() {
     let sortedProducts = [...array];
     return sortedProducts.sort((a, b) => {
       // return new Date(a.createdAt) > new Date(b.createdAt) ? -1 : 1;
-      if (sort === 'latest') {
+      if (sort.sortOrder === 'latest') {
         return new Date(a.updatedAt) > new Date(b.updatedAt) ? 1 : -1;
-      } else if (sort === 'earliest') {
+      } else if (sort.sortOrder === 'earliest') {
         return new Date(a.updatedAt) > new Date(b.updatedAt) ? -1 : 1;
       }
     });
+  };
+
+  const filterSelectCategory = (array) => {
+    if (!selectedCategory || sort.category === 'all' || sort.sortBy === 'date')
+      return array;
+    return array.filter((item) => item.categoryID === sort.category);
+  };
+
+  const selectCategoryHandler = (e) => {
+    setSort({ ...sort, category: e.target.value });
+    setSelectedCategory(e.target.value);
+    // console.log(e.target.value);
   };
 
   useEffect(() => {
@@ -90,9 +103,10 @@ function App() {
         <Filter
           sort={sort}
           searchValue={searchValue}
-          onSort={sortHandler}
+          onSort={sortTypeHandler}
           onSearch={searchHandler}
           categories={categories}
+          onSelectCategory={selectCategoryHandler}
         />
         <ProductsList
           products={filteredProducts}
