@@ -1,14 +1,25 @@
-const ProductsList = ({ products, categories }) => {
+const ProductsList = ({ products, setProducts, categories }) => {
   const options = { hour: '2-digit', minute: '2-digit', hour12: false };
 
   const findCategory = (categoryID) => {
     return categories.find((item) => item.id === parseInt(categoryID)).title;
   };
+
+  const deleteProduct = (productID) => {
+    const filteredProducts = products.filter(
+      (product) => product.id !== parseInt(productID)
+    );
+    setProducts(filteredProducts);
+  };
+
   return (
     <div className='flex flex-col gap-y-2'>
       {products.map((product) => {
         return (
-          <div className='flex items-center justify-between' key={product.id}>
+          <div
+            className='flex items-center justify-between overflow-x-auto w-full'
+            key={product.id}
+          >
             <p className='text-base text-slate-300 font-bold '>
               {product.title}
             </p>
@@ -30,6 +41,7 @@ const ProductsList = ({ products, categories }) => {
               </span>
 
               <button
+                onClick={() => deleteProduct(product.id)}
                 className=' delete-product text-base border border-red-400 px-2 py-0.5 rounded-2xl text-red-400 hover:text-red-600 hover:border-red-600 font-bold'
                 aria-label='delete-product'
                 data-product-id={product.id}
