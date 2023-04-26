@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useSnackbar } from 'notistack';
 
 const ProductsForm = ({ categories, setProducts }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const [productData, setProductData] = useState({
     title: '',
     quantity: '',
@@ -21,6 +23,18 @@ const ProductsForm = ({ categories, setProducts }) => {
       id: Date.now(),
       createdAt: new Date().toISOString(),
     };
+    if (!newProduct.title || !newProduct.categoryID || !newProduct.quantity) {
+      enqueueSnackbar('Please fill in all Product fields', {
+        variant: 'error',
+        autoHideDuration: 3000,
+        preventDuplicate: true,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
+      return;
+    }
     setProducts((prevState) => [...prevState, newProduct]);
     setProductData({ title: '', quantity: '', categoryID: '' });
   };

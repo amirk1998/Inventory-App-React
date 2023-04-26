@@ -9,7 +9,12 @@ function App() {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [sort, setSort] = useState('latest');
+  // const [sort, setSort] = useState('latest');
+  const [sort, setSort] = useState({
+    sortBy: 'date',
+    sortOrder: 'latest',
+    category: '',
+  });
   const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
@@ -25,7 +30,17 @@ function App() {
   };
 
   const sortHandler = (e) => {
-    setSort(e.target.value);
+    // setSort(e.target.value);
+    const { name, value } = e.target;
+    if (name === 'sort-by') {
+      if (value === 'category') {
+        setSort({ sortBy: 'category' });
+      } else {
+        setSort({ sortBy: 'date', sortOrder: 'latest' });
+      }
+    } else if (name === 'sort-order') {
+      setSort({ ...sort, sortOrder: value });
+    }
   };
 
   const filterSearchTitle = (array) => {
@@ -44,6 +59,26 @@ function App() {
     });
   };
 
+  useEffect(() => {
+    const savedProducts = JSON.parse(localStorage.getItem('products')) || [];
+    const savedCategories =
+      JSON.parse(localStorage.getItem('categories')) || [];
+    setProducts(savedProducts);
+    setCategories(savedCategories);
+  }, []);
+
+  useEffect(() => {
+    if (products.length) {
+      localStorage.setItem('products', JSON.stringify(products));
+    }
+  }, [products]);
+
+  useEffect(() => {
+    if (categories.length) {
+      localStorage.setItem('categories', JSON.stringify(categories));
+    }
+  }, [categories]);
+
   return (
     <div className='App bg-slate-800 min-h-screen w-full'>
       <Navbar />
@@ -57,6 +92,7 @@ function App() {
           searchValue={searchValue}
           onSort={sortHandler}
           onSearch={searchHandler}
+          categories={categories}
         />
         <ProductsList
           products={filteredProducts}

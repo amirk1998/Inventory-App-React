@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useSnackbar } from 'notistack';
 
 const CategoryForm = ({ setCategories }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const [isShow, setIsShow] = useState(false);
 
   const [categoryData, setCategoryData] = useState({
@@ -15,6 +17,7 @@ const CategoryForm = ({ setCategories }) => {
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
+
     setCategoryData({
       ...categoryData,
       [name]: value,
@@ -28,6 +31,18 @@ const CategoryForm = ({ setCategories }) => {
       id: Date.now(),
       createdAt: new Date().toISOString(),
     };
+    if (!newCategory.title || !newCategory.description) {
+      enqueueSnackbar('Please fill in all Category fields', {
+        variant: 'error',
+        autoHideDuration: 3000,
+        preventDuplicate: true,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
+      return;
+    }
     setCategories((prevState) => [...prevState, newCategory]);
     setCategoryData({ title: '', description: '' });
   };
@@ -58,12 +73,6 @@ const CategoryForm = ({ setCategories }) => {
               value={categoryData.title}
               onChange={changeHandler}
             />
-            <span
-              id='category-title-error'
-              className='text-red-500 px-2 py-0.5 hidden'
-            >
-              Please enter title correctly.
-            </span>
           </div>
           <div>
             <label
@@ -74,18 +83,12 @@ const CategoryForm = ({ setCategories }) => {
             </label>
             <textarea
               className='bg-transparent rounded-xl px-2 py-1 border-2 border-slate-500 text-slate-400 h-16 w-full resize-none outline-none focus:border-white'
-              type=' text'
+              type='text'
               name='description'
               id='category-description'
               value={categoryData.description}
               onChange={changeHandler}
             ></textarea>
-            <span
-              id='category-description-error'
-              className='text-red-500 px-2 py-0.5 hidden'
-            >
-              Please enter description correctly.
-            </span>
           </div>
           <div className='flex items-center justify-between gap-x-4'>
             <button
